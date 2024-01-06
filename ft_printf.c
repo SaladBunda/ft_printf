@@ -6,15 +6,14 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 19:12:29 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/01/03 19:30:58 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/01/06 14:44:48 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <fcntl.h>
 #include <stdio.h>
 
-static void	printing(const char *s, va_list args, int *counter, int i)
+static void	printing(const char *s, va_list args, int *ct, int i)
 {
 	while (s[++i] != '\0')
 	{
@@ -22,26 +21,24 @@ static void	printing(const char *s, va_list args, int *counter, int i)
 		{
 			i++;
 			if (s[i] == 'd' || s[i] == 'i')
-				(*counter) += ft_putnbr(va_arg(args, int));
+				(*ct) += ft_putnbr(va_arg(args, int));
 			else if (s[i] == 's')
-				(*counter) += ft_putstr(va_arg(args, char *));
+				(*ct) += ft_putstr(va_arg(args, char *));
 			else if (s[i] == 'c')
-				(*counter) += ft_putchar(va_arg(args, int));
-			else if (s[i] == 'X')
-				(*counter) += ft_put_uhex(va_arg(args, unsigned int));
-			else if (s[i] == 'x')
-				(*counter) += ft_puthex(va_arg(args, unsigned int));
+				(*ct) += ft_putchar(va_arg(args, int));
+			else if (s[i] == 'x' || s[i] == 'X')
+				(*ct) += ft_putx(va_arg(args, unsigned int), s[i]);
 			else if (s[i] == 'p')
-				(*counter) += ft_putstr("0x") + ft_puthex(va_arg(args, size_t));
+				(*ct) += ft_putstr("0x") + ft_putx(va_arg(args, size_t), 'p');
 			else if (s[i] == 'u')
-				(*counter) += ft_put_u(va_arg(args, unsigned int));
+				(*ct) += ft_put_u(va_arg(args, unsigned int));
 			else if (s[i] == '%')
-				(*counter) += ft_putchar('%');
+				(*ct) += ft_putchar('%');
 			else if (s[i] == '\0')
 				return ;
 		}
 		else
-			(*counter) += ft_putchar(s[i]);
+			(*ct) += ft_putchar(s[i]);
 	}
 }
 
@@ -63,5 +60,7 @@ int	ft_printf(const char *s, ...)
 
 /* int main()
 {
-	return(ft_printf("%%%"));
+	ft_printf("%  ");
+	ft_putchar('\n');
+	printf("%  ");
 } */
