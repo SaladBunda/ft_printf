@@ -1,49 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putx.c                                          :+:      :+:    :+:   */
+/*   printing_numbers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/02 21:51:30 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/01/25 16:26:39 by ael-maaz         ###   ########.fr       */
+/*   Created: 2024/01/26 18:43:56 by ael-maaz          #+#    #+#             */
+/*   Updated: 2024/01/26 18:47:33 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void	recurs(size_t n, char *base)
+static void	recurs(long n, int *index)
 {
-	if (n < 16)
-		ft_putchar(base[n]);
+	(*index)++;
+	if (n < 10)
+		ft_putchar(n + '0');
 	else
 	{
-		recurs(n / 16, base);
-		ft_putchar(base[n % 16]);
+		recurs(n / 10, index);
+		ft_putchar((n % 10) + '0');
 	}
 }
 
-int	ft_putx(size_t x, char c)
+int	ft_put_u(unsigned int n)
 {
-	char	*base;
+	int	i;
+
+	i = 0;
+	recurs(n, &i);
+	return (i);
+}
+
+int	ft_put_s(int n)
+{
+	long	nbr;
 	int		count;
-	size_t	num;
 
 	count = 0;
-	base = "0123456789abcdef";
-	if (c == 'X')
-		base = "0123456789ABCDEF";
-	num = x;
-	if (num == 0)
-		count = 1;
+	nbr = (long)n;
+	if (nbr >= 0)
+		recurs(nbr, &count);
 	else
 	{
-		while (num > 0)
-		{
-			num /= 16;
-			count++;
-		}
+		count++;
+		ft_putchar('-');
+		recurs(-nbr, &count);
 	}
-	recurs(x, base);
 	return (count);
+}
+
+int	printing_numbers(long n, char c)
+{
+	if (c == 'i' || c == 'd')
+		return (ft_put_s(n));
+	else
+		return (ft_put_u(n));
 }
